@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require_relative './lib/reversi_methods'
+require 'debug'
 
 class Reversi
   include ReversiMethods
 
   QUIT_COMMANDS = %w[quit exit q].freeze
-
   def initialize
     @board = build_initial_board
     @current_stone = BLACK_STONE
@@ -15,7 +15,6 @@ class Reversi
   def run
     loop do
       output(@board)
-
       if finished?(@board)
         puts '試合終了'
         puts "白○:#{count_stone(@board, WHITE_STONE)}"
@@ -32,7 +31,7 @@ class Reversi
       print "command? (#{@current_stone == WHITE_STONE ? '白○' : '黒●'}) > "
       command = gets.chomp
       break if QUIT_COMMANDS.include?(command)
-
+      #binding.break
       begin
         if put_stone(@board, command, @current_stone)
           puts '配置成功、次のターン'

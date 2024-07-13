@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'debug'
 
 class Position
   # マスを'f3','d6'などの表記で表現する。変数名cell_refとして取り扱う。
@@ -35,7 +36,7 @@ class Position
   end
 
   def out_of_board?
-    !((0..7).cover?(row) && (0..7).cover?(col))
+    !(0..7).cover?(row) || !(0..7).cover?(col)
   end
 
   def stone_color(board)
