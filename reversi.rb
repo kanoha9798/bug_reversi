@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative './lib/reversi_methods'
-require 'debug'
 
 class Reversi
   include ReversiMethods
@@ -31,7 +30,6 @@ class Reversi
       print "command? (#{@current_stone == WHITE_STONE ? '白○' : '黒●'}) > "
       command = gets.chomp
       break if QUIT_COMMANDS.include?(command)
-      #binding.break
       begin
         if put_stone(@board, command, @current_stone)
           puts '配置成功、次のターン'

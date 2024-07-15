@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative './position'
-require 'debug'
 
 module ReversiMethods
   WHITE_STONE = 'W'
@@ -10,7 +9,7 @@ module ReversiMethods
 
   def build_initial_board
     # boardは盤面を示す二次元配列
-    board = Array.new(8) { Array.new(8, BLANK_CELL) }
+    board = Array.new(8).map { Array.new(8, BLANK_CELL) }
     board[3][3] = WHITE_STONE # d4
     board[4][4] = WHITE_STONE # e5
     board[3][4] = BLACK_STONE # d5
@@ -36,7 +35,7 @@ module ReversiMethods
   def copy_board(to_board, from_board)
     from_board.each_with_index do |cols, row|
       cols.each_with_index do |cell, col|
-        to_board[col][row] = cell
+        to_board[row][col] = cell
       end
     end
   end
@@ -45,10 +44,10 @@ module ReversiMethods
     pos = Position.new(cell_ref)
     raise '無効なポジションです' if pos.invalid?
     raise 'すでに石が置かれています' unless pos.stone_color(board) == BLANK_CELL
-    #binding.break
+    
     # コピーした盤面にて石の配置を試みて、成功すれば反映する
     copied_board = Marshal.load(Marshal.dump(board))
-    copied_board[pos.col][pos.row] = stone_color
+    copied_board[pos.row][pos.col] = stone_color
     turn_succeed = false
     Position::DIRECTIONS.each do |direction|
       next_pos = pos.next_position(direction)
@@ -63,10 +62,12 @@ module ReversiMethods
   def turn(board, target_pos, attack_stone_color, direction)
     return false if target_pos.out_of_board?
     return false if target_pos.stone_color(board) == attack_stone_color
+    return false if target_pos.stone_color(board) == BLANK_CELL
 
     next_pos = target_pos.next_position(direction)
+  
     if (next_pos.stone_color(board) == attack_stone_color) || turn(board, next_pos, attack_stone_color, direction)
-      board[target_pos.col][target_pos.row] = attack_stone_color
+      board[target_pos.row][target_pos.col] = attack_stone_color
       true
     else
       false
@@ -74,6 +75,11 @@ module ReversiMethods
   end
 
   def finished?(board)
+    count_white = count_stone(board, WHITE_STONE)
+    count_black = count_stone(board, BLACK_STONE)
+    
+    return true if count_white == 0 || count_black == 0
+    
     !placeable?(board, WHITE_STONE) && !placeable?(board, BLACK_STONE)
   end
 
@@ -90,6 +96,6 @@ module ReversiMethods
   end
 
   def count_stone(board, attack_stone_color)
-    board.flatten.count { |cell| cell == stone_color }
+    board.flatten.count { |cell| cell == attack_stone_color }
   end
 end
