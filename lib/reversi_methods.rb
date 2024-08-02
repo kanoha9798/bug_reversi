@@ -39,7 +39,7 @@ module ReversiMethods
       end
     end
   end
-  
+
   def put_stone(board, cell_ref, stone_color, dry_run: false)
     pos = Position.new(cell_ref)
     raise '無効なポジションです' if pos.invalid?
