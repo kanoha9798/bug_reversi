@@ -9,7 +9,7 @@ module ReversiMethods
 
   def build_initial_board
     # boardは盤面を示す二次元配列
-    board = Array.new(8).map { Array.new(8, BLANK_CELL) }
+    board = Array.new(8) { Array.new(8, BLANK_CELL) }
     board[3][3] = WHITE_STONE # d4
     board[4][4] = WHITE_STONE # e5
     board[3][4] = BLACK_STONE # d5
