@@ -15,7 +15,7 @@ class Reversi
   def run
     loop do
       output(@board)
- 
+
       if finished?(@board)
         puts '試合終了'
         puts "白○:#{count_stone(@board, WHITE_STONE)}"
